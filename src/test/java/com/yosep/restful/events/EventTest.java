@@ -1,8 +1,10 @@
-package com.yosep.restful;
+package com.yosep.restful.events;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
+
+import com.yosep.restful.events.Event;
 
 public class EventTest {
 	@Test

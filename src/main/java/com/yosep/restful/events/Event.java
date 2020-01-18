@@ -1,4 +1,4 @@
-package com.yosep.restful;
+package com.yosep.restful.events;
 
 import java.time.LocalDateTime;
 
