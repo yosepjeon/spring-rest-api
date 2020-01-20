@@ -2,6 +2,12 @@ package com.yosep.restful.events;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -15,7 +21,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(of="id")
+@Entity
 public class Event {
+	@Id @GeneratedValue
 	private Integer id;
 	private String name;
 	private String description;
@@ -29,5 +37,6 @@ public class Event {
 	private int limitOfEnrollment;
 	private boolean offline;
 	private boolean free;
+	@Enumerated(EnumType.STRING) // Enum의 순서가 바뀌면 데이터가 꼬일수 있기 때문에 스트링으로 저장하는 것을 권장.
 	private EventStatus eventStatus;
 }
