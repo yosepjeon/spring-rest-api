@@ -29,6 +29,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.6'
+	testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'

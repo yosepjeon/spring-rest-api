@@ -50,7 +50,7 @@ public class Event {
 		}
 		
 		// Update offline
-		if(this.location == null || this.location.isEmpty()) {
+		if(this.location == null || this.location.isEmpty() || this.location.trim().length() == 0) {
 			this.offline = false;
 		}else {
 			this.offline = true;
