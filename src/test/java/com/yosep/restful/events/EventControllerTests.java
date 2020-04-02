@@ -37,7 +37,7 @@ import com.yosep.restful.common.TestDescription;
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-@Import(RestDocsConfiguration.class)
+@Import(RestDocsConfiguration.class) // 다른 스프링 빈 설정파일을 읽어와서 사용하는 방법 중 하나.
 public class EventControllerTests {
 	@Autowired
 	MockMvc mockMvc;

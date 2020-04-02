@@ -24,14 +24,9 @@ ext {
 }
 
 dependencies {
-	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.2.RELEASE'
-	testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.2.RELEASE'
-
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//compile group: 'org.asciidoctor', name: 'asciidoctor-gradle-plugin', version: '1.5.7'
-	//compile group: 'org.apache.maven.plugins', name: 'maven-resources-plugin', version: '3.1.0'
 	compileOnly 'org.projectlombok:lombok'
 	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.6'
 	testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'

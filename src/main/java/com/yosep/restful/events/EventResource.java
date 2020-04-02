@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 //}
 
 // JsonUnwrapped가 적용되어 있다.
+// Resource<>를 사용하면 자동으로 JsonUnwrap 적용해줌.
 // Bean이 아님
 public class EventResource extends Resource<Event> {
 
