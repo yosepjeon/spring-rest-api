@@ -1,7 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.7.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-	id 'org.asciidoctor.convert' version '1.5.8'
+	id "org.asciidoctor.convert" version "1.5.9.2"
 	id 'java'
 }
 
@@ -20,12 +20,15 @@ repositories {
 }
 
 ext {
+	//snippetsDir = file('build/generated-snippets')
 	set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
 	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.2.RELEASE'
 	testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.2.RELEASE'
+	//asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:{project-version}'
+	//testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:{project-version}'
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
@@ -41,6 +44,19 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
+
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+	
+	from file("build/asciidoc/html5/")
+	into file("src/main/resources/static/docs")                            
+                            
+}
+
+build{
+    dependsOn copyDocument
+}
+
 
 test {
 	outputs.dir snippetsDir

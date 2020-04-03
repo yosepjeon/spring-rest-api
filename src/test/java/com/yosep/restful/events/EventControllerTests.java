@@ -68,13 +68,12 @@ public class EventControllerTests {
 				.andExpect(jsonPath("offline").value(true))
 				.andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
 				// self링크 같은 경우 해당 이벤트 resource마다 매번 설정해줘야 하니까 이런 기능은 EventResource에 추가해주는 것이 좋음
-//			.andExpect(jsonPath("_links.self").exists())
-				.andExpect(jsonPath("_links.query-events").exists()).andExpect(jsonPath("_links.update-event").exists())
 				.andDo(document("create-event",
 						links(
 								linkWithRel("self").description("link to self"),
 								linkWithRel("query-events").description("link to query events"),
-								linkWithRel("update-event").description("link to update an existing event")
+								linkWithRel("update-event").description("link to update an existing event"),
+								linkWithRel("profile").description("link to profile")
 						),
 						requestHeaders(
 								headerWithName(HttpHeaders.ACCEPT).description("accept header"),
@@ -113,7 +112,8 @@ public class EventControllerTests {
 								fieldWithPath("eventStatus").description("eventStatus"),
 								fieldWithPath("_links.self.href").description("link to self"),
 								fieldWithPath("_links.query-events.href").description("link to query event list"),
-								fieldWithPath("_links.update-event.href").description("link to update exiting event")
+								fieldWithPath("_links.update-event.href").description("link to update exiting event"),
+								fieldWithPath("_links.profile.href").description("link to profile")
 						)
 						// _links에 대한 부분도 response의 일부로 보고 있기 때문에 이를 회피하기 위한 방법의 하나로 relaxedResponseFields() 사용
 						// 장점: 문서의 일부분만 테스트 가능
