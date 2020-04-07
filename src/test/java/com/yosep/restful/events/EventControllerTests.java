@@ -25,6 +25,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.RequestFieldsSnippet;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -38,6 +39,7 @@ import com.yosep.restful.common.TestDescription;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Import(RestDocsConfiguration.class) // 다른 스프링 빈 설정파일을 읽어와서 사용하는 방법 중 하나.
+@ActiveProfiles("test")
 public class EventControllerTests {
 	@Autowired
 	MockMvc mockMvc;
@@ -179,9 +181,14 @@ public class EventControllerTests {
 		this.mockMvc
 				.perform(post("/api/events").contentType(MediaType.APPLICATION_JSON_UTF8)
 						.content(this.objectMapper.writeValueAsString(eventDTO)))
-				.andDo(print()).andExpect(status().isBadRequest()).andExpect(jsonPath("$[0].objectName").exists())
+				.andDo(print()).andExpect(status().isBadRequest()).andExpect(jsonPath("content[0].objectName").exists())
 //		.andExpect(jsonPath("$[0].field").exists())
-				.andExpect(jsonPath("$[0].defaultMessage").exists()).andExpect(jsonPath("$[0].code").exists());
+				
+				/*
+				 * JsonUnwarpped는 Json array에는 Unwrap이 안됨. 아래로 코드 수정...
+					.andExpect(jsonPath("$[0].defaultMessage").exists()).andExpect(jsonPath("$[0].code").exists()).andExpect(jsonPath("_links.index").exists());
+				*/
+				.andExpect(jsonPath("content[0].defaultMessage").exists()).andExpect(jsonPath("content[0].code").exists()).andExpect(jsonPath("_links.index").exists());
 //		.andExpect(jsonPath("$[0].rejectedValue").exists());
 	}
 }
