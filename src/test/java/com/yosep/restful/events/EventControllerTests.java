@@ -39,7 +39,7 @@ import com.yosep.restful.common.TestDescription;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Import(RestDocsConfiguration.class) // 다른 스프링 빈 설정파일을 읽어와서 사용하는 방법 중 하나.
-@ActiveProfiles("test")
+@ActiveProfiles("test")// test환경에서 확인하겠다는 의미.
 public class EventControllerTests {
 	@Autowired
 	MockMvc mockMvc;
