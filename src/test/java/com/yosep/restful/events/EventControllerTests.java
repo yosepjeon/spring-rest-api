@@ -47,6 +47,7 @@ public class EventControllerTests {
 	@Autowired
 	ObjectMapper objectMapper;
 
+	// 주석 처리
 //	@MockBean
 //	EventRepository eventRepository;
 
