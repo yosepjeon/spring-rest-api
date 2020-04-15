@@ -7,6 +7,9 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import com.yosep.restful.accounts.Account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,7 +43,9 @@ public class Event {
 	private boolean free;
 	@Enumerated(EnumType.STRING) // Enum의 순서가 바뀌면 데이터가 꼬일수 있기 때문에 스트링으로 저장하는 것을 권장.
 	private EventStatus eventStatus = EventStatus.DRAFT;
-
+	@ManyToOne
+	private Account manager;
+	
 	public void update() {
 		// Update free
 		if (this.basePrice == 0 && this.maxPrice == 0) {
