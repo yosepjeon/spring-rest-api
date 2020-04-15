@@ -11,9 +11,4 @@ public class YosepSpringRestfulProjectApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(YosepSpringRestfulProjectApplication.class, args);
 	}
-
-	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
 }
