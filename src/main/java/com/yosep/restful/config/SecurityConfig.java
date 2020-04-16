@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -54,6 +55,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		// TODO Auto-generated method stub
 		web.ignoring().mvcMatchers("/docs/index.html");
 		web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+	}
+	
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		// TODO Auto-generated method stub
+		http.anonymous()
+			.and()
+			.formLogin()
+			.and()
+			.authorizeRequests()
+			.mvcMatchers(HttpMethod.GET,"/api/**").anonymous() // /api로 시작하는 모든 요청을 익명을 허용하겠다.
+			.anyRequest().authenticated(); // 나머지는 인증이 필요하다.
 	}
 
 //	http방식의 필터 securityfilter는 일단 통과
