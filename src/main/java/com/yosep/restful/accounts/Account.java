@@ -40,3 +40,5 @@ public class Account {
 	@Enumerated(value = EnumType.STRING) // 
 	private Set<AccountRole> roles;
 }
+
+// 수정사항
