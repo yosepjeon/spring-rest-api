@@ -44,10 +44,10 @@ public class AccountServiceTest {
 		String password = "123123";
 
 		// Given
-		Account account = Account.builder().email(userName).password(password)
-				.roles(Stream.of(AccountRole.ADMIN, AccountRole.USER).collect(Collectors.toSet())).build();
-
-		this.accountService.saveAccount(account);
+//		Account account = Account.builder().email(userName).password(password)
+//				.roles(Stream.of(AccountRole.ADMIN, AccountRole.USER).collect(Collectors.toSet())).build();
+//
+//		this.accountService.saveAccount(account);
 
 		// When
 		UserDetailsService userDetailsService = (UserDetailsService) accountService;

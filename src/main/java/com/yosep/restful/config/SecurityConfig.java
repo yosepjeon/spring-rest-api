@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.formLogin()
 			.and()
 			.authorizeRequests()
-			.mvcMatchers(HttpMethod.GET,"/api/**").anonymous() // /api로 시작하는 모든 요청을 익명을 허용하겠다.
+			.mvcMatchers(HttpMethod.GET,"/api/**").authenticated() // /api로 시작하는 모든 요청을 익명을 허용하겠다.
 			.anyRequest().authenticated(); // 나머지는 인증이 필요하다.
 	}
 
