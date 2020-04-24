@@ -43,6 +43,7 @@ public class Event {
 	private boolean free;
 	@Enumerated(EnumType.STRING) // Enum의 순서가 바뀌면 데이터가 꼬일수 있기 때문에 스트링으로 저장하는 것을 권장.
 	private EventStatus eventStatus = EventStatus.DRAFT;
+	
 	@ManyToOne
 	private Account manager;
 	

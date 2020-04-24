@@ -9,6 +9,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -26,7 +27,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.oauth2.common.util.Jackson2JsonParser;
+import org.springframework.test.web.servlet.ResultActions;
 
+import com.yosep.restful.accounts.AccountService;
 import com.yosep.restful.common.BaseControllerTest;
 import com.yosep.restful.common.TestDescription;
 
@@ -38,6 +43,9 @@ public class EventControllerTests extends BaseControllerTest{
 	
 	@Autowired
 	EventRepository eventRepository;
+	
+	@Autowired
+	AccountService accountService;
 
 	@Test
 	@TestDescription("정상적으로 이벤트를 생성하는 테스트")
@@ -51,7 +59,9 @@ public class EventControllerTests extends BaseControllerTest{
 //		event.setId(10);
 //		Mockito.when(eventRepository.save(event)).thenReturn(event);
 
-		mockMvc.perform(post("/api/events/").contentType(MediaType.APPLICATION_JSON_UTF8).accept(MediaTypes.HAL_JSON)
+		mockMvc.perform(post("/api/events/")
+				.header(HttpHeaders.AUTHORIZATION, getBearerToken())
+				.contentType(MediaType.APPLICATION_JSON_UTF8).accept(MediaTypes.HAL_JSON)
 				.content(objectMapper.writeValueAsString(event))).andDo(print()).andExpect(status().isCreated())
 				.andExpect(jsonPath("id").exists()).andExpect(header().exists(HttpHeaders.LOCATION))
 				.andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
@@ -104,7 +114,8 @@ public class EventControllerTests extends BaseControllerTest{
 								fieldWithPath("_links.self.href").description("link to self"),
 								fieldWithPath("_links.query-events.href").description("link to query event list"),
 								fieldWithPath("_links.update-event.href").description("link to update exiting event"),
-								fieldWithPath("_links.profile.href").description("link to profile")
+								fieldWithPath("_links.profile.href").description("link to profile"),
+								fieldWithPath("manager").description("manager..")
 						)
 						// _links에 대한 부분도 response의 일부로 보고 있기 때문에 이를 회피하기 위한 방법의 하나로 relaxedResponseFields() 사용
 						// 장점: 문서의 일부분만 테스트 가능
@@ -130,6 +141,10 @@ public class EventControllerTests extends BaseControllerTest{
 
 	}
 
+	public String getBearerToken() throws Exception {
+		return "Bearer " + getAccessToken();
+	}
+
 	@Test
 	@TestDescription("입력 받을 수 없는 값을 사용한 경우에 에러가 발생하는 테스트")
 	public void createEvent_Bad_Request() throws Exception {
@@ -143,7 +158,7 @@ public class EventControllerTests extends BaseControllerTest{
 //		event.setId(10);
 //		Mockito.when(eventRepository.save(event)).thenReturn(event);
 
-		mockMvc.perform(post("/api/events/").contentType(MediaType.APPLICATION_JSON_UTF8).accept(MediaTypes.HAL_JSON)
+		mockMvc.perform(post("/api/events/").header(HttpHeaders.AUTHORIZATION, getBearerToken()).contentType(MediaType.APPLICATION_JSON_UTF8).accept(MediaTypes.HAL_JSON)
 				.content(objectMapper.writeValueAsString(event))).andDo(print()).andExpect(status().isBadRequest());
 
 	}
@@ -153,7 +168,7 @@ public class EventControllerTests extends BaseControllerTest{
 	public void createEvent_Bad_Request_Empty_Input() throws Exception {
 		EventDTO eventDTO = EventDTO.builder().build();
 
-		this.mockMvc.perform(post("/api/events").contentType(MediaType.APPLICATION_JSON_UTF8)
+		this.mockMvc.perform(post("/api/events").header(HttpHeaders.AUTHORIZATION, getBearerToken()).contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(this.objectMapper.writeValueAsString(eventDTO))).andExpect(status().isBadRequest());
 	}
 
@@ -168,7 +183,7 @@ public class EventControllerTests extends BaseControllerTest{
 				.limitOfEnrollment(100).location("강남역 D2 스타트업 팩토리").build();
 
 		this.mockMvc
-				.perform(post("/api/events").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.perform(post("/api/events").header(HttpHeaders.AUTHORIZATION, getBearerToken()).contentType(MediaType.APPLICATION_JSON_UTF8)
 						.content(this.objectMapper.writeValueAsString(eventDTO)))
 				.andDo(print()).andExpect(status().isBadRequest()).andExpect(jsonPath("content[0].objectName").exists())
 //		.andExpect(jsonPath("$[0].field").exists())
@@ -238,6 +253,7 @@ public class EventControllerTests extends BaseControllerTest{
 		// TODO: create를 참조하며 문서화하자.
 		// When & Then
 		this.mockMvc.perform(put("/api/events/{id}",event.getId())
+				.header(HttpHeaders.AUTHORIZATION, getBearerToken())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(this.objectMapper.writeValueAsString(eventDto))
 				)
@@ -259,6 +275,7 @@ public class EventControllerTests extends BaseControllerTest{
 		
 		// When & Then
 		this.mockMvc.perform(put("/api/events/{id}",event.getId())
+				.header(HttpHeaders.AUTHORIZATION, getBearerToken())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(this.objectMapper.writeValueAsString(eventDto)))
 		.andDo(print())
@@ -276,6 +293,7 @@ public class EventControllerTests extends BaseControllerTest{
 		
 		// When & Then
 		this.mockMvc.perform(put("/api/events/123123",event.getId())
+				.header(HttpHeaders.AUTHORIZATION, getBearerToken())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(this.objectMapper.writeValueAsString(eventDto)))
 		.andDo(print())
@@ -291,6 +309,7 @@ public class EventControllerTests extends BaseControllerTest{
 		
 		// When & Then
 		this.mockMvc.perform(put("/api/events/{id}",event.getId())
+				.header(HttpHeaders.AUTHORIZATION, getBearerToken())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(this.objectMapper.writeValueAsString(eventDto)))
 		.andDo(print())
@@ -307,5 +326,38 @@ public class EventControllerTests extends BaseControllerTest{
 				.limitOfEnrollment(100).location("강남역 D2 스타트업 팩토리").free(false).offline(true).eventStatus(EventStatus.DRAFT).build();
 		
 		return this.eventRepository.save(event);
+	}
+	
+	private String getAccessToken() throws Exception {
+		// TODO Auto-generated method stub
+		// Given
+				String username = "enekelx1@naver.com";
+				String password = "123123";
+				
+				// AppConfig에 이미 위의 회원 정보를 담아서 실행하기 때문에 주석 처리하였다. 이것때문에 1시간 삽질...
+//				Account user = Account.builder()
+//						.email(username)
+//						.password(password)
+//						.roles(Stream.of(AccountRole.ADMIN, AccountRole.USER).collect(Collectors.toSet()))
+//						.build();
+		//
+//				this.accountService.saveAccount(user);
+				
+				String clientId = "myApp";
+				String clientSecret = "pass";
+
+				ResultActions perform = this.mockMvc.perform(post("/oauth/token")
+						.with(httpBasic(clientId, clientSecret))
+						.param("username", username)
+						.param("password", password)
+						.param("grant_type", "password"));
+				
+				MockHttpServletResponse response = perform.andReturn().getResponse();
+				
+				String responseBody = response.getContentAsString();
+				
+				Jackson2JsonParser parser = new Jackson2JsonParser();
+				
+				return parser.parseMap(responseBody).get("access_token").toString();
 	}
 }
