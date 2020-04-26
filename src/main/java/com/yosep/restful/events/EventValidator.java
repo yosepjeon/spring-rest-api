@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
+// 이벤트 검증을 위한 클래스
 @Component
 public class EventValidator {
 
